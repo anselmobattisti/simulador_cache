@@ -35,32 +35,32 @@ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_t
 
 O resultado final da executação será:
 
-'''
+```
 Total de acessos: 10
 Total HIT 0
 Total MISS 10
 Taxa de Cache HIT 0.0%
-'''
+```
 
 No segundo exemplo duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são hit.
 
 python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_50_hit.txt
 
-'''
+```
 Total de acessos: 10
 Total HIT 8
 Total MISS 2
 Taxa de Cache HIT 80.0%
-'''
+```
 
 No teceriro exemplo temos uma mesma posição sendo acessada consecutivamente, assim, ocorre apenas um miss e o restante é hit
 
 python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_100_hit.txt
 
-'''
+```
 Total de acessos: 10
 Total HIT 9
 Total MISS 1
 Taxa de Cache HIT 90.0%
-'''
+```
 
