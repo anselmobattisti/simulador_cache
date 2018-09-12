@@ -1,0 +1,10 @@
+{
+  "name": "Python: Current File",
+  "type": "python",
+  "request": "launch",
+  "program": "${file}",
+  "args":[
+    "--total_cache","10"
+  ],
+  "pythonPath": "C:\\Users\\Anselmo\\AppData\\Local\\Programs\\Python\\Python37-32"
+}
