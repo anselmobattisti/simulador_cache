@@ -67,3 +67,10 @@ Taxa de Cache HIT 90.0%
 No quarto exemplo apresentamos um exemplo onde a ineficiência do mapeamento direto é apresentada. Apesar de existir um número grande de memória o número de miss é elevado uma vez que está sendo feita um alto uso de memória de uma localidade de memória com sombreamento entre si de utilização de memória.
 
 python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_misto_hit.txt
+
+```
+Total de acessos: 13
+Total HIT 2
+Total MISS 11
+Taxa de Cache HIT 15.38%
+```
