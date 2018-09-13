@@ -1,5 +1,29 @@
 # Simulador de Cache
 
+Olá, ficamos muito felizes que você tenha interesse em aprender um pouco mais sobre as políticas de substituição de páginas da memória cache!
+
+Esse script permite que você visualize de forma didática como ocorre a escolha e a substituição de uma posição de memória no cache.
+
+Instalação
+--
+
+O único pré-requisito do script é que sua maquina rode python 3.7+
+
+Para saber qual versão do python que você tem instalado acesse o seu terminal e digite:
+
+```
+$ python --version
+```
+
+Como resultado desejado deve aparecer algo do tipo
+
+```
+Python 3.7.0
+```
+
+O que foi implementado
+--
+
 Esse projeto foi desenvolvido com o objetivo de apresentar as principais políticas de substituição de páginas em memória cache. Serão implementados 4 algoritmos de substituição, sendo eles:
 
 * FIFO
