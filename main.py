@@ -61,7 +61,7 @@ def executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar):
   print('Total HIT {}'.format(num_hit))
   print('Total MISS {}'.format(num_miss))
   taxa_cache_hit = (num_hit / len(posicoes_memoria_para_acessar))*100
-  print('Taxa de Cache HIT {}%'.format(taxa_cache_hit))
+  print('Taxa de Cache HIT {number:.{digits}f}%'.format(number=taxa_cache_hit, digits=2))
 
 parser = argparse.ArgumentParser(prog='Simulador de Cache')
 parser.add_argument('--total_cache',type=int, help='Número total de páginas da memória cache')
