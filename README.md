@@ -80,3 +80,23 @@ Total HIT 2
 Total MISS 11
 Taxa de Cache HIT 15.38%
 ```
+
+NOTA DOS AUTORES
+--
+
+No método direto não existem políticas de substituição de cache uma vez que a posição da memória principal sempre estará mapeada com a mesma posição de memória da memória cache, já nos modos associativo e associativo por conjunto essa relação direta entre as duas memórias não existe, e portanto, é necessário que sejam implementados mecanismos para escolher em caso de falta de espaço na memória cache, qual posição será descartada para que a nova posição seja ocupada.
+
+2 - Mapeamento Associativo
+--
+
+No mapeamento associativo não existe uma posição pré-estabelecida, ou seja, determinística entre a posição da memória principal e a posição da memória cache, dessa forma é necessário percorrer toda a memória cache a fim de verificar se a posição da memória princial está ou não na cache.
+
+Caso a posição de memória esteja na cache estão ela é retornada como um HIT, caso ela não exista então é necessário que seja escolhida uma posição de memória para ser removida da cache, no caso do MISS.
+
+O problema desse tipo de mapeamento é que o o custo para identificar se uma posição da memória principal está na cache é a de verificar todas as posições da cache, isso é ruim!
+
+Os algoritmos de substição de cache são os mesmos tanto para o associativo como para o associativo por conjunto!
+
+```
+$ python main.py --total_cache 3 --tipo_mapeamento=AS --arquivo_acesso=arquivos_teste/acesso_associativo_100_hit.txt --debug 1
+```
