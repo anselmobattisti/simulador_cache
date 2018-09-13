@@ -20,18 +20,17 @@ Os parâmetros recebidos pelo programa são:
 * arquivo_acesso: arquivo com as entradas das posições de memória que dem acessadas, cada linha corresponde a uma posição de memória diferente.
 
 Exemplo de uso:
---
 
-python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=acesso.txt --debug 1
-
-Mapeamento Direto
+1 - Mapeamento Direto
 --
 
 O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache, nessa aplicação foi implementado utilizando o mod. Temos quatro arquivos com cenários diferentes com relação ao uso do mapeamento direto.
 
 No primeiro exemplo ocorre nenhum cache hit, ou seja, para cada posição de memória desejada será necessário ir buscar na memória principal
 
-python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_0_hit.txt
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_0_hit.txt
+```
 
 O resultado final da executação será:
 
@@ -44,7 +43,9 @@ Taxa de Cache HIT 0.0%
 
 No segundo exemplo duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são hit.
 
-python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_50_hit.txt
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_50_hit.txt
+```
 
 ```
 Total de acessos: 10
@@ -55,7 +56,9 @@ Taxa de Cache HIT 80.0%
 
 No teceriro exemplo temos uma mesma posição sendo acessada consecutivamente, assim, ocorre apenas um miss e o restante é hit
 
-python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_100_hit.txt
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_100_hit.txt
+```
 
 ```
 Total de acessos: 10
@@ -66,7 +69,10 @@ Taxa de Cache HIT 90.0%
 
 No quarto exemplo apresentamos um exemplo onde a ineficiência do mapeamento direto é apresentada. Apesar de existir um número grande de memória o número de miss é elevado uma vez que está sendo feita um alto uso de memória de uma localidade de memória com sombreamento entre si de utilização de memória.
 
-python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_misto_hit.txt
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_misto_hit.txt
+```
+
 
 ```
 Total de acessos: 13
