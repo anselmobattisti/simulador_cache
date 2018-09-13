@@ -27,7 +27,7 @@ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=acesso.txt
 Mapeamento Direto
 --
 
-O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache, nessa aplicação foi implementado utilizando o mod. Temos 3 arquivos com cenários diferentes com relação ao uso do mapeamento direto.
+O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache, nessa aplicação foi implementado utilizando o mod. Temos quatro arquivos com cenários diferentes com relação ao uso do mapeamento direto.
 
 No primeiro exemplo ocorre nenhum cache hit, ou seja, para cada posição de memória desejada será necessário ir buscar na memória principal
 
@@ -64,3 +64,6 @@ Total MISS 1
 Taxa de Cache HIT 90.0%
 ```
 
+No quarto exemplo apresentamos um exemplo onde a ineficiência do mapeamento direto é apresentada. Apesar de existir um número grande de memória o número de miss é elevado uma vez que está sendo feita um alto uso de memória de uma localidade de memória com sombreamento entre si de utilização de memória.
+
+python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_misto_hit.txt
