@@ -50,9 +50,27 @@ Exemplo de uso:
 1 - Mapeamento Direto
 --
 
-O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache, nessa aplicação foi implementado utilizando o mod. Temos quatro arquivos com cenários diferentes com relação ao uso do mapeamento direto.
+O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache. Nessa aplicação essa associação foi implementado utilizando o mod, porém, caso o endereçamento de memória seja binário em geral é utilizado um conjunto dos primeiros do endereçamento da posição de memória como referência da posição da memória cache, o tamanho da memória cache definirá a quantidade de bits que serão selecionados.
 
-No primeiro exemplo ocorre nenhum cache hit, ou seja, para cada posição de memória desejada será necessário ir buscar na memória principal
+Nessa aplicação de exemplo foram criados quatro arquivos com cenários diferentes com relação ao uso do mapeamento direto, tentamos aqui refletir as principais situação de cache hit e cache miss.
+
+No primeiro exemplo não ocorrem CACHE HIT, ou seja, para cada posição de memória desejada será necessário ir buscar na memória principal.
+
+O arquivo acesso_direto_0_hit.txt é composto por:
+```
+1
+2
+3
+11
+12
+13
+14
+6
+7
+15
+```
+
+Executando o comando:
 
 ```
 $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_0_hit.txt
@@ -61,23 +79,91 @@ $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos
 O resultado final da executação será:
 
 ```
++--------------------------+
+|      Cache Direto        |
++--------------------------+
+|Tamanho Cache:          10|
++----------+---------------+
+|Pos Cache |           Data|
++----------+---------------+
+|         0|             -1|
+|         1|             11|
+|         2|             12|
+|         3|             13|
+|         4|             14|
+|         5|             15|
+|         6|              6|
+|         7|              7|
+|         8|             -1|
+|         9|             -1|
++----------+---------------+
+
+------------------------
+Resumo Mapeamento Direto
+------------------------
 Total de acessos: 10
-Total HIT 0
-Total MISS 10
-Taxa de Cache HIT 0.0%
+Total HIT: 0
+Total MISS: 10
+Taxa de Cache HIT: 0.00%
 ```
 
+É imporatnte ressaltar nesse exemplo que algumas posições da memória cache não foram utilizadas pois nenhuma das posições de memória solicitadas estavam associadas com as posições de memória vazias, com -1.
+
+
 No segundo exemplo duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são hit.
+
+O arquivo arquivos_teste/acesso_direto_50_hit.txt é composto por
+
+```
+0
+1
+2
+3
+4
+5
+0
+1
+2
+3
+4
+5
+```
+Executando o comando:
 
 ```
 $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_50_hit.txt
 ```
 
+O resultado final da executação será:
+
 ```
++--------------------------+
+|      Cache Direto        |
++--------------------------+
+|Tamanho Cache:          10|
++----------+---------------+
+|Pos Cache |           Data|
++----------+---------------+
+|         0|             -1|
+|         1|              1|
+|         2|              2|
+|         3|             -1|
+|         4|             -1|
+|         5|             -1|
+|         6|             -1|
+|         7|             -1|
+|         8|             -1|
+|         9|             -1|
++----------+---------------+
+
+
+------------------------
+Resumo Mapeamento Direto
+------------------------
 Total de acessos: 10
-Total HIT 8
-Total MISS 2
-Taxa de Cache HIT 80.0%
+Total HIT: 8
+Total MISS: 2
+Taxa de Cache HIT: 80.00%
 ```
 
 No teceriro exemplo temos uma mesma posição sendo acessada consecutivamente, assim, ocorre apenas um miss e o restante é hit
