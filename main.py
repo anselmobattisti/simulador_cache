@@ -210,23 +210,19 @@ def politica_substituicao_LRU(memoria_cache, qtd_conjuntos, posicao_memoria):
     # tenham o mesmo número de acessos
     posicao_substituir = random.choice(candidatos_lru)
 
-    print('*')
-    print(posicao_substituir)
-    print('*')
-
   # zera o número de acessos a posição que foi substituida
   contador_lru[posicao_substituir] = 0
 
+  # altera a posição de memória que está na cache
+  memoria_cache[lista_posicoes[posicao_substituir]] = posicao_memoria
+
   if debug:
+    print('Posição Cache Substituir: {}'.format(posicao_substituir))
     print('Contador LRU: {}'.format(contador_lru))
     print('Posição Memória: {}'.format(posicao_memoria))
     print('Conjunto: {}'.format(num_conjunto))
     print('Lista posições: {}'.format(lista_posicoes))
     print('Posição para subistituição: {}'.format(posicao_substituir))
-
-  memoria_cache[lista_posicoes[posicao_substituir]] = posicao_memoria
-
-  if debug:
     print('Posição de memória cache que será trocada é: {}'.format(lista_posicoes[posicao_substituir]))
 
 
@@ -249,10 +245,12 @@ def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
   num_conjunto = get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos)
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos)
 
+  # verifica se alguma das posições daquele conjunto está vazia
   for x in lista_posicoes:
     if memoria_cache[x] == -1:
       return x
   return -1
+
 
 def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, politica_substituicao='RANDOM'):
   """Executa a operação de mapeamento associativo, ou seja, não existe uma posição específica
