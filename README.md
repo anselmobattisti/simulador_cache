@@ -170,13 +170,50 @@ python main.py --total_cache 6 --tipo_mapeamento=AC --arquivo_acesso=arquivos_te
 ```
 
 
+No exemplo de substituição utilizando o LRU é necessário que haja um controle individual sobre cada posição da cache para saber quantas vezes ela já foi acessada dentro do seu conjunto.
+
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/lru_0.txt --debug 1 --politica_substituicao LRU --qtd_conjuntos 1
+```
+
+As saída dessa executação foi:
+
+```
+Contador LRU:
+Posição Cache    Qtd Acessos
+0                3
+1                4
+2                3
+3                3
+4                0
+5                0
+6                0
+7                0
+8                0
+9                0
+------------------------------
 
 
+-----------------
+Resumo Mapeamento
+-----------------
+Política de Substituição: LRU
+-----------------
+Total de acessos: 17
+Total HIT 13
+Total MISS 4
+Taxa de Cache HIT 76.47%
+------------------------------
+```
+
+Mostrando então que houve a computação do número de acesso para cada uma das posições acessadas em relação ao conjunto que ela ocupa dentro da cache.
 
 
+No próximo exemplo temos um total de 4 posições da memória cahce e dois conjuntos, nese caso, duas posições tem o mesmo número de acesso então é feito um sorteio para ver qual será a posição descartada.
 
-
-
+```
+$ python main.py --total_cache 4 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/lru_3.txt --debug 1 --politica_substituicao LRU --qtd_conjuntos 2
+```
 
 
 
