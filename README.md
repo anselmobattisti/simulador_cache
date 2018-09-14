@@ -2,7 +2,9 @@
 
 Olá, ficamos muito felizes que você tenha interesse em aprender um pouco mais sobre as políticas de substituição de páginas da memória cache!
 
-Esse script permite que você visualize de forma didática como ocorre a escolha e a substituição de uma posição de memória no cache.
+A memória cache é menor do que a memória principal, logo, é necessário que existam mecanismos que permitam que um endereço da memória principal seja associado com um endereço da memória cache, além disso, no momento que a memória cache estiver cheia e um novo dados da memória principal for ser executado é necessário que algum dado antigo da memória cache seja removido, são as políticas de substituição de memória.
+
+Esse script permite que você visualize de forma didática como ocorre a escolha e a substituição de uma posição de memória no cache em três modelos diferentes de mapeamento de memória.
 
 Instalação
 --
@@ -124,3 +126,34 @@ Os algoritmos de substição de cache são os mesmos tanto para o associativo co
 ```
 $ python main.py --total_cache 3 --tipo_mapeamento=AS --arquivo_acesso=arquivos_teste/acesso_associativo_100_hit.txt --debug 1
 ```
+
+Exemplo de execução de mapeamento associativo com política de substituição FIFO
+
+```
+$ python main.py --total_cache 6 --tipo_mapeamento=AS --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_51_hit.txt --debug 1 --politica_substituicao FIFO
+```
+
+3 - Mapeamento Associativo por conjuntos
+--
+
+Nesse modo, a memória cache é dividida em conjutos, ou seja, uma posição da memória principal é mapeada sempre para um mesmo conjunto e isso permite uma consulta mais rápida na cache se uma dada posição de memória está ou não nela.
+
+No exemplo abaixo é aplicado o mapeamento por conjunto utilizando como número de conjuntos o valor 2 e como política de substituição da memória está sendo utilizado o tipo RANDOM
+
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_100_hit.txt --qtd_conjuntos 2 --debug 1 --politica_substituicao RANDOM
+```
+
+No segundo exemplo estamos utilizando a politica de substituição conhecida como FIFO, ou seja, a primeira posição de memória que entra no conjunto e a primeira que será substituída quando houver um cache miss.
+
+
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_100_hit.txt --qtd_conjuntos 2 --debug 1 --politica_substituicao FIFO
+```
+
+Nesse exemplo temos alguns cache hit obrigando assim que o contador da posição a ser substituida não seja incrementado.
+
+```
+$ python main.py --total_cache 10 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_51_hit.txt --qtd_conjuntos 2 --debug 1 --politica_substituicao FIFO
+```
+
