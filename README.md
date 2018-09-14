@@ -157,3 +157,8 @@ Nesse exemplo temos alguns cache hit obrigando assim que o contador da posição
 $ python main.py --total_cache 10 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_51_hit.txt --qtd_conjuntos 2 --debug 1 --politica_substituicao FIFO
 ```
 
+O próximo exemplo simula o processo o tipo de mapeamento associativo por conjunto com um total de 6 posições de cache e dois conjuntos.
+
+```
+$ python main.py --total_cache 6 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_51_hit.txt --debug 1 --politica_substituicao FIFO --qtd_conjuntos 2
+```
