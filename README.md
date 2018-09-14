@@ -162,3 +162,23 @@ O próximo exemplo simula o processo o tipo de mapeamento associativo por conjun
 ```
 $ python main.py --total_cache 6 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_51_hit.txt --debug 1 --politica_substituicao FIFO --qtd_conjuntos 2
 ```
+
+Nesse exemplo temos leituras de memórias em dois conjuntos distintos, mostrando que primeiro é substituído a posição que está há mais tempo na memória cache, respeitando a ordem do conjunto.
+
+```
+python main.py --total_cache 6 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/acesso_associativo_conjunto_52_hit.txt --debug 1 --politica_substituicao FIFO --qtd_conjuntos 2
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
