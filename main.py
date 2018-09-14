@@ -9,6 +9,7 @@ contador_lru = {}
 # principal foi inserida na memória cache
 contador_fifo = {}
 
+
 def imprimir_contador_fifo():
     print('-'*30)
     print("Contador FIFO:")
@@ -16,6 +17,7 @@ def imprimir_contador_fifo():
     for index, x in enumerate(contador_fifo):
       print("{} \t {}".format(index,x))
     print('-'*30)
+
 
 def inicializar_contador_fifo():
   """Seta os valores do contador fifo para que a primeira subsitituição
@@ -37,21 +39,21 @@ def get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos):
 
 
 def print_cache_direto(cache):
-  print("+------- Cache ------+")
-  print("|# \t|\t Data|")
-  print("+--------------------+")
+  print("+------------- Cache -----------+")
+  print("|# \t|\t\tData|")
+  print("+-----------------------------+")
   for posicao, valor in cache.items():
-    print("|{} \t|\t   {}|".format(posicao, valor))
+    print("|{} \t|\t   {:>4}|".format(posicao, valor))
   print("+--------------------+")
 
 
 def print_cache_associativo_conjunto(cache, qtd_conjuntos):
-  print("+------- Cache ------+")
+  print("+------------ Cache -----------+")
   print("|#\t|Cnj\t|\t Data|")
-  print("+--------------------+")
+  print("+------------------------------+")
   for posicao, valor in cache.items():
     num_conjunto = int(posicao)%int(qtd_conjuntos)
-    print("|{} \t|{}\t|\t   {}|".format(posicao, num_conjunto, valor))
+    print("|{} \t|{:4}\t|\t   {:>4}|".format(posicao, num_conjunto, valor))
   print("+--------------------+")
 
 
@@ -73,6 +75,7 @@ def inicializar_cache(total_cache):
     memoria_cache[x] = -1
 
   return memoria_cache
+
 
 def verifica_posicao_em_cache_associativo_conjunto(memoria_cache, qtd_conjuntos, posicao_memoria,):
   """Verifica se uma determinada posição de memória está na cache
@@ -115,6 +118,14 @@ def get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos
 
 
 def politica_substituicao_RANDOM(memoria_cache, qtd_conjuntos, posicao_memoria):
+  """Nessa politica de substituição no momento que ocorrer um cache miss
+  será sorteado um elemento do conjunto para ser removido
+
+  Arguments:
+    memoria_cache {list} -- memóiria cache
+    qtd_conjuntos {int} -- quantidade de conjuntos
+    posicao_memoria {int} -- posição de memória que será acessada
+  """
   num_conjunto = int(posicao_memoria)%int(qtd_conjuntos)
 
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
@@ -134,11 +145,19 @@ def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
   num_conjunto = int(posicao_memoria)%int(qtd_conjuntos)
   posicao_substituir = contador_fifo[num_conjunto]
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
+
+  if debug:
+    print('Contador Fifo: {}'.format(contador_fifo))
+    print('Posição Memória: {}'.format(posicao_memoria))
+    print('Conjunto: {}'.format(num_conjunto))
+    print('Lista posições: {}'.format(lista_posicoes))
+    print('Posição para subistituição: {}'.format(posicao_substituir))
+
   memoria_cache[lista_posicoes[posicao_substituir]] = posicao_memoria
 
-  if posicao_substituir < (len(memoria_cache)/qtd_conjuntos):
-    contador_fifo[num_conjunto] += 1
-  else:
+  contador_fifo[num_conjunto] += 1
+
+  if contador_fifo[num_conjunto] >= (len(memoria_cache)/qtd_conjuntos):
     contador_fifo[num_conjunto] = 0
 
   if debug:
@@ -302,10 +321,10 @@ def executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar):
 
 parser = argparse.ArgumentParser(prog='Simulador de Cache')
 parser.add_argument('--total_cache',type=int, help='Número total de páginas da memória cache')
-parser.add_argument('--tipo_mapeamento', help='Tipo do mapeamento desejado, os valores aceitos para esse parâmetro são DI / AS / AC ')
-parser.add_argument('--politica_substituicao', default='ALL', help='Qual será a política de substituição da memória que será utilizada, os valores aceitos para esse parâmetro são RANDOM / FIFO / LRU / LFU ')
-parser.add_argument('--qtd_conjuntos', type=int, default=1, help='Quando for escolhido o tipo de mapeamento AC deve-se informar o número de conjuntos quantos conjuntos devem ser criados dentro da memória cache.')
-parser.add_argument('--arquivo_acesso', help='Nome do arquivo que possui as posições da memória principal que serão acessadas, formato de número inteiro e uma posição de memória principal por linha. ')
+parser.add_argument('--tipo_mapeamento', help='Tipo do mapeamento desejado, os valores aceitos para esse parâmetro são: DI / AS / AC ')
+parser.add_argument('--politica_substituicao', default='ALL', help='Qual será a política de substituição da memória que será utilizada, os valores aceitos para esse parâmetro são: RANDOM / FIFO / LRU / LFU ')
+parser.add_argument('--qtd_conjuntos', type=int, default=1, help='Quando for escolhido o tipo de mapeamento AC deve-se informar quantos conjuntos devem ser criados dentro da memória cache.')
+parser.add_argument('--arquivo_acesso', default='', help='Nome do arquivo que possui as posições da memória principal que serão acessadas, formato de número inteiro e uma posição de memória principal por linha. ')
 parser.add_argument('--debug', default=0, help='Por padrão vem setado como 0, caso queira exibir os debugs basta passar --debug 1')
 
 args = parser.parse_args()
@@ -317,6 +336,12 @@ arquivo_acesso = args.arquivo_acesso
 qtd_conjuntos = args.qtd_conjuntos
 politica_substituicao  = args.politica_substituicao.upper()
 debug = args.debug
+
+if arquivo_acesso == '':
+  print('\n\n------------------------------')
+  print('ERRO: É necesário informar o nome do arquivo que será processado, o parâmetro esperado é --arquivo_acesso seguido do nome do arquivo.')
+  print('------------------------------')
+  exit()
 
 # lê o arquivo e armazena cada uma das posições de memória que será lida em uma lista
 try:
