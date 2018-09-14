@@ -2,12 +2,34 @@ import argparse, random, re
 
 # Essa lista irá armazenar qual o número de vezes que uma
 # determinada posição da memória cache foi executada
-contador_lru = {}
+contador_lfu = {}
 
 
 # Essa lista irá armazenar a ordem que a posição da memória
 # principal foi inserida na memória cache
 contador_fifo = {}
+
+
+def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
+  """Verifica se existe na cache alguma posição de memória vazia,
+  se existir essa posição é retornada.
+
+  Arguments:
+    memoria_cache {list} -- memória cache
+    qtd_conjuntos {int} -- número de conjuntos da cache
+    posicao_memoria {int} -- posição de memória que se quer armazenar na cache
+
+  Returns:
+    [int] -- com a primeira posição de memória vazia do conjunto
+  """
+  num_conjunto = get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos)
+  lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos)
+
+  # verifica se alguma das posições daquele conjunto está vazia
+  for x in lista_posicoes:
+    if memoria_cache[x] == -1:
+      return x
+  return -1
 
 
 def imprimir_contador_fifo():
@@ -31,34 +53,42 @@ def inicializar_contador_fifo():
     imprimir_contador_fifo()
 
 
-def imprimir_contador_lru():
+def imprimir_contador_lfu():
     print('-'*30)
-    print("Contador LRU:")
+    print("Contador LFU:")
     print("Posição Cache \t Qtd Acessos")
-    for index, x in enumerate(contador_lru):
-      print("{} \t\t {}".format(index,contador_lru[x]))
+    for index, x in enumerate(contador_lfu):
+      print("{} \t\t {}".format(index,contador_lfu[x]))
     print('-'*30)
 
 
-def inicializar_contador_lru():
-  """Seta os valores do contador lru para zero, ou seja, a posição que ocupa aquela
+def inicializar_contador_lfu():
+  """Seta os valores do contador LFU para zero, ou seja, a posição que ocupa aquela
   posição da cache ainda não foi utilizada. Para cada posição da cache teremos um contador
   que será somado tada vez que houver um hit e será zerado quando a posição for substituida
   """
-  # cria on contador lru uma posiçõao para caqda posição de memória
+  # cria on contador LFU uma posiçõao para caqda posição de memória
   for x in range(0, total_cache):
-    contador_lru[x] = 0
+    contador_lfu[x] = 0
 
   if debug:
-    imprimir_contador_lru()
+    imprimir_contador_lfu()
 
 
 def get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos):
+  """Retorna o número do conjunto onde essa posição de memória é sempre mapeada
+
+  Arguments:
+    posicao_memoria {int} -- posição de memória que se quer acessar
+    qtd_conjuntos {int} -- número de conjuntos que a cache possui
+  """
   return int(posicao_memoria)%int(qtd_conjuntos)
 
 
 def print_cache_direto(cache):
-  print("+------------- Cache -----------+")
+  print("+-----------------------------+")
+  print("|         Cache               +")
+  print("+-----------------------------+")
   print("|# \t|\t\tData|")
   print("+-----------------------------+")
   for posicao, valor in cache.items():
@@ -67,13 +97,15 @@ def print_cache_direto(cache):
 
 
 def print_cache_associativo_conjunto(cache, qtd_conjuntos):
+  print("+-----------------------------+")
+  print("|Tamanho: {} \n|Conjuntos: {}".format(len(cache), qtd_conjuntos))
   print("+------------ Cache -----------+")
-  print("|#\t|Cnj\t|\t Data|")
+  print("|#\t|Cnj\t|\t   Data|")
   print("+------------------------------+")
   for posicao, valor in cache.items():
     num_conjunto = int(posicao)%int(qtd_conjuntos)
     print("|{} \t|{:4}\t|\t   {:>4}|".format(posicao, num_conjunto, valor))
-  print("+--------------------+")
+  print("+------------------------------+")
 
 
 def inicializar_cache(total_cache):
@@ -161,6 +193,13 @@ def politica_substituicao_RANDOM(memoria_cache, qtd_conjuntos, posicao_memoria):
 
 
 def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
+  """Nessa politica de substituição o primeiro elemento que entra é o primeiro elemento que sai
+
+  Arguments:
+    memoria_cache {list} -- memóiria cache
+    qtd_conjuntos {int} -- quantidade de conjuntos
+    posicao_memoria {int} -- posição de memória que será acessada
+  """
   num_conjunto = int(posicao_memoria)%int(qtd_conjuntos)
   posicao_substituir = contador_fifo[num_conjunto]
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
@@ -183,8 +222,16 @@ def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
     print('Posição de memória cache que será trocada é: {}'.format(lista_posicoes[posicao_substituir]))
 
 
-def politica_substituicao_LRU(memoria_cache, qtd_conjuntos, posicao_memoria):
+def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
+  """Nessa politica de substituição o elemento que é menos acessado é removido da
+  memória cache quando ocorrer um MISS, a cada HIT aquela posição do HIT ganha um ponto
+  de acesso
 
+  Arguments:
+    memoria_cache {list} -- memóiria cache
+    qtd_conjuntos {int} -- quantidade de conjuntos
+    posicao_memoria {int} -- posição de memória que será acessada
+  """
   num_conjunto = int(posicao_memoria)%int(qtd_conjuntos)
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
 
@@ -193,32 +240,32 @@ def politica_substituicao_LRU(memoria_cache, qtd_conjuntos, posicao_memoria):
   if len(lista_posicoes) > 1:
 
     if debug:
-      imprimir_contador_lru()
+      imprimir_contador_lfu()
 
     # descobrir qual das posições é menos usada
     lista_qtd_acessos = []
     for qtd_acessos in range(0, len(lista_posicoes)):
-      lista_qtd_acessos.append(contador_lru[qtd_acessos])
+      lista_qtd_acessos.append(contador_lfu[qtd_acessos])
 
     posicoes_com_menos_acesso = min(lista_qtd_acessos)
-    candidatos_lru = []
+    candidatos_lfu = []
     for qtd_acessos in range(0, len(lista_posicoes)):
-      if contador_lru[qtd_acessos] == posicoes_com_menos_acesso:
-        candidatos_lru.append(qtd_acessos)
+      if contador_lfu[qtd_acessos] == posicoes_com_menos_acesso:
+        candidatos_lfu.append(qtd_acessos)
 
     # para garantir ordem aleatória de escolha caso duas ou mais posições
     # tenham o mesmo número de acessos
-    posicao_substituir = random.choice(candidatos_lru)
+    posicao_substituir = random.choice(candidatos_lfu)
 
   # zera o número de acessos a posição que foi substituida
-  contador_lru[posicao_substituir] = 0
+  contador_lfu[posicao_substituir] = 0
 
   # altera a posição de memória que está na cache
   memoria_cache[lista_posicoes[posicao_substituir]] = posicao_memoria
 
   if debug:
     print('Posição Cache Substituir: {}'.format(posicao_substituir))
-    print('Contador LRU: {}'.format(contador_lru))
+    print('Contador LFU: {}'.format(contador_lfu))
     print('Posição Memória: {}'.format(posicao_memoria))
     print('Conjunto: {}'.format(num_conjunto))
     print('Lista posições: {}'.format(lista_posicoes))
@@ -226,30 +273,61 @@ def politica_substituicao_LRU(memoria_cache, qtd_conjuntos, posicao_memoria):
     print('Posição de memória cache que será trocada é: {}'.format(lista_posicoes[posicao_substituir]))
 
 
-def politica_substituicao_LFU():
-  pass
-
-
-def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
-  """Verifica se existe na cache alguma posição de memória vazia,
-  se existir essa posição é retornada.
+def politica_substituicao_LRU_miss(memoria_cache, qtd_conjuntos, posicao_memoria):
+  """Nessa politica de substituição quando ocorre um HIT a posição vai para o topo da fila,
+  se ocorrer um MISS remove o elemento 0 e a posição da cache onde a memória foi alocada é
+  colocada no topo da fila
 
   Arguments:
-    memoria_cache {list} -- memória cache
-    qtd_conjuntos {int} -- número de conjuntos da cache
-    posicao_memoria {int} -- posição de memória que se quer armazenar na cache
-
-  Returns:
-    [int] -- com a primeira posição de memória vazia do conjunto
+    memoria_cache {list} -- memóiria cache
+    qtd_conjuntos {int} -- quantidade de conjuntos
+    posicao_memoria {int} -- posição de memória que será acessada
   """
   num_conjunto = get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos)
-  lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos)
+  lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
 
-  # verifica se alguma das posições daquele conjunto está vazia
-  for x in lista_posicoes:
-    if memoria_cache[x] == -1:
-      return x
-  return -1
+  # copiar os valores de cada posição da cache do conjunto em questão uma posição para traz
+  for posicao_cache in lista_posicoes:
+    proxima_posicao = posicao_cache+qtd_conjuntos
+    if proxima_posicao < len(memoria_cache):
+      memoria_cache[posicao_cache] = memoria_cache[proxima_posicao]
+
+  memoria_cache[lista_posicoes[-1]] = posicao_memoria
+
+  if debug:
+    print('Posição Memória: {}'.format(posicao_memoria))
+    print('Conjunto: {}'.format(num_conjunto))
+    print('Lista posições: {}'.format(lista_posicoes))
+
+
+def politica_substituicao_LRU_hit(memoria_cache, qtd_conjuntos, posicao_memoria, posicao_cache_hit):
+  """Nessa politica de substituição quando ocorre um HIT a posição vai para o topo da fila,
+  se ocorrer um MISS remove o elemento 0 e a posição da cache onde a memória foi alocada é
+  colocada no topo da fila
+
+  Arguments:
+    memoria_cache {list} -- memóiria cache
+    qtd_conjuntos {int} -- quantidade de conjuntos
+    posicao_memoria {int} -- posição de memória que será acessada
+    posicao_cache_hit {int} -- posição de memória cache onde o dados da memória principal está
+  """
+  num_conjunto = get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos)
+  lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
+
+  # copiar os valores de cada posição da cache do conjunto em questão uma posição para traz
+  for posicao_cache in lista_posicoes:
+    if posicao_cache_hit <= posicao_cache:
+      proxima_posicao = posicao_cache+qtd_conjuntos
+      if proxima_posicao < len(memoria_cache):
+        memoria_cache[posicao_cache] = memoria_cache[proxima_posicao]
+
+  memoria_cache[lista_posicoes[-1]] = posicao_memoria
+
+  if debug:
+    print('Posição Memória: {}'.format(posicao_memoria))
+    print('Conjunto: {}'.format(num_conjunto))
+    print('Lista posições: {}'.format(lista_posicoes))
+
 
 
 def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, politica_substituicao='RANDOM'):
@@ -276,8 +354,9 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
     inicializar_contador_fifo()
 
   # se a política for fifo então inicializa a lista de controle
-  if politica_substituicao == 'LRU':
-    inicializar_contador_lru()
+  if politica_substituicao == 'LFU':
+    inicializar_contador_lfu()
+
 
   for index, posicao_memoria in enumerate(posicoes_memoria_para_acessar):
 
@@ -287,9 +366,15 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
       num_hit += 1
       hitoumiss = 'Hit'
 
+      # se for LFU então toda vez que der um HIT será incrementado o contador daquela posição
+      if politica_substituicao == 'LFU':
+        imprimir_contador_lfu()
+        contador_lfu[inserir_memoria_na_posicao_cache] += 1
+
       # se for LRU então toda vez que der um HIT será incrementado o contador daquela posição
       if politica_substituicao == 'LRU':
-        contador_lru[inserir_memoria_na_posicao_cache] += 1
+        politica_substituicao_LRU_hit(memoria_cache, qtd_conjuntos, posicao_memoria, inserir_memoria_na_posicao_cache)
+
 
     else:
       num_miss += 1
@@ -309,16 +394,18 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
         politica_substituicao_RANDOM(memoria_cache,qtd_conjuntos,posicao_memoria)
       elif politica_substituicao == 'FIFO':
         politica_substituicao_FIFO(memoria_cache,qtd_conjuntos,posicao_memoria)
+      elif politica_substituicao == 'LFU':
+        politica_substituicao_LFU(memoria_cache,qtd_conjuntos,posicao_memoria)
       elif politica_substituicao == 'LRU':
-        politica_substituicao_LRU(memoria_cache,qtd_conjuntos,posicao_memoria)
+        politica_substituicao_LRU_miss(memoria_cache,qtd_conjuntos,posicao_memoria)
 
-    print('\nLeitura número {} da memória {}'.format(index,posicao_memoria))
+    print('\nLeitura linha {}, posição de memória {}.'.format(index,posicao_memoria))
     print('Status: {}'.format(hitoumiss))
     print_cache_associativo_conjunto(memoria_cache, qtd_conjuntos)
 
-  # se for LRU e com debug imprimir os dados computador no contador lru
-  if politica_substituicao == 'LRU' and debug:
-    imprimir_contador_lru()
+  # se for LFU e com debug imprimir os dados computador no contador LFU
+  if politica_substituicao == 'LFU' and debug:
+    imprimir_contador_lfu()
 
   print('\n\n-----------------')
   print('Resumo Mapeamento')
@@ -379,7 +466,7 @@ def executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar):
 
     memoria_cache[posicao_cache] = posicao_memoria
 
-    print('\nLeitura número {} da memória {}'.format(index,posicao_memoria))
+    print('\nLeitura linha {},  posição de memória lida {}.'.format(index,posicao_memoria))
     print('Status: {}'.format(hitoumiss))
     print_cache_direto(memoria_cache)
 
