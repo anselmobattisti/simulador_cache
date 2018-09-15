@@ -34,12 +34,14 @@ def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
 
 
 def imprimir_contador_fifo():
-    print('-'*30)
-    print("Contador FIFO:")
-    print("Conjunto \t Próxima Posição Substituir")
+    print('+--------------------------------------+')
+    print("| Contador FIFO                        |")
+    print('+--------------------------------------+')
+    print("|Conjunto | Próxima Posição Substituir |")
+    print('+---------+----------------------------+')
     for index, x in enumerate(contador_fifo):
-      print("{} \t {}".format(index,x))
-    print('-'*30)
+      print("|{:>9}|{:>28}|".format(index,x))
+    print('+---------+----------------------------+')
 
 
 def inicializar_contador_fifo():
@@ -55,12 +57,14 @@ def inicializar_contador_fifo():
 
 
 def imprimir_contador_lfu():
-    print('-'*30)
-    print("Contador LFU:")
-    print("Posição Cache \t Qtd Acessos")
+    print('+--------------------------------------+')
+    print("| Contador LFU                         |")
+    print('+--------------------------------------+')
+    print("|Posição Cache | Qtd Acessos           |")
+    print('+---------+----------------------------+')
     for index, x in enumerate(contador_lfu):
-      print("{} \t\t {}".format(index,contador_lfu[x]))
-    print('-'*30)
+      print("|{:>9}|{:>28}|".format(index,contador_lfu[x]))
+    print('+---------+----------------------------+')
 
 
 def inicializar_contador_lfu():
@@ -92,7 +96,7 @@ def print_cache_direto(cache):
   print("+--------------------------+")
   print("|Tamanho Cache: {:>11}| ".format(len(cache)))
   print("+----------+---------------+")
-  print("|Pos Cache |           Data|")
+  print("|Pos Cache |Posição Memória|")
   print("+----------+---------------+")
   for posicao, valor in cache.items():
     print("|{:>10}|{:>15}|".format(posicao, valor))
@@ -114,14 +118,16 @@ def print_cache_associativo(cache):
 
 def print_cache_associativo_conjunto(cache, qtd_conjuntos):
   print("+------------------------------+")
-  print("|Tamanho: {} \n|Conjuntos: {}".format(len(cache), qtd_conjuntos))
-  print("+ Cache Associativo por Conjunto +")
-  print("|#\t|Cnj\t|\t   Data|")
-  print("+-------------------------------+")
+  print("|Tamanho: {:>21}|\n|Conjuntos: {:>19}|".format(len(cache), qtd_conjuntos))
+  print("+------------------------------+")
+  print("+  Cache Associativo Conjunto  +")
+  print("+-------+-------+--------------+")
+  print("|#\t| Cnj\t|   Pos Memória|")
+  print("+-------+-------+--------------+")
   for posicao, valor in cache.items():
     num_conjunto = get_num_conjuno_posicao_memoria(posicao, qtd_conjuntos)
     print("|{} \t|{:4}\t|\t   {:>4}|".format(posicao, num_conjunto, valor))
-  print("+------------------------------+")
+  print("+-------+-------+--------------+")
 
 
 def inicializar_cache(total_cache):
@@ -221,7 +227,7 @@ def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
 
   if debug:
-    print('Contador Fifo: {}'.format(contador_fifo))
+    imprimir_contador_fifo()
     print('Posição Memória: {}'.format(posicao_memoria))
     print('Conjunto: {}'.format(num_conjunto))
     print('Lista posições: {}'.format(lista_posicoes))
@@ -364,7 +370,6 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
   else:
     print_cache_associativo_conjunto(memoria_cache, qtd_conjuntos)
 
-  hitoumiss = ''
   num_hit = 0
   num_miss = 0
 
