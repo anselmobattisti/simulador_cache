@@ -23,6 +23,13 @@ Como resultado desejado deve aparecer algo do tipo
 Python 3.7.0
 ```
 
+Após a instalação do script para acessar o help basta digitar no console:
+
+```
+$ python main.py -h
+```
+
+
 O que foi implementado
 --
 
@@ -106,10 +113,34 @@ Total MISS: 10
 Taxa de Cache HIT: 0.00%
 ```
 
-É imporatnte ressaltar nesse exemplo que algumas posições da memória cache não foram utilizadas pois nenhuma das posições de memória solicitadas estavam associadas com as posições de memória vazias, com -1.
+É imporatnte ressaltar que nesse exemplo algumas posições da memória cache não foram utilizadas pois nenhuma das posições de memória solicitadas estavam associadas com as posições de memória vazias, com -1.  Isso mostra que a associação direta ganha em tempo de computação mas, em contra partida, pode perder em flexibilidade uma vez que mesmo havendo posições de memória cache disponível foi necessário fazer a substituição de uma página de memória na memória cache.
 
+Caso o mesmo arquivo seja executado utilizando, por exemplo, um esquema de cache associativo o resultado final seria:
 
-No segundo exemplo duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são hit.
+```
++--------------------------+
+|Tamanho Cache:          10|
++----------+---------------+
+|     Cache Associativo    |
++----------+---------------+
+|Pos Cache |Posição Memória|
++----------+---------------+
+|         0|              1|
+|         1|              2|
+|         2|              3|
+|         3|             11|
+|         4|             12|
+|         5|             13|
+|         6|             14|
+|         7|              6|
+|         8|              7|
+|         9|             15|
++----------+---------------+
+```
+
+Perceba agora que como o tamanho da cache é exatamente igual a quantidade de posições diferentes de memória que está se tentando acessar, não existe troca de posição de memória na cache, isso é bom pois assim estamos utilizando a cache de maneira integral.
+
+No segundo exemplo, duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são CACHE HIT.
 
 O arquivo arquivos_teste/acesso_direto_50_hit.txt é composto por
 

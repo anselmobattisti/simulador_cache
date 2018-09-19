@@ -548,6 +548,11 @@ except IOError as identifier:
   print('------------------------------')
   exit()
 
+if len(posicoes_memoria_para_acessar) == 0:
+    print('\n\n------------------------------')
+    print('ERRO: o arquivo {} não possui nenhuma linha com números inteiros.'.format(arquivo_acesso))
+    print('------------------------------')
+    exit()
 
 print('+====================+')
 print('| SIMULADOR DE CACHE |')
@@ -566,7 +571,14 @@ if tipo_mapeamento != 'DI':
 if tipo_mapeamento == 'DI':
   executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar)
 elif tipo_mapeamento == 'AS':
-  executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, politica_substituicao)
+  if (politica_substituicao == 'ALL'):
+    executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, 'RANDOM')
+    executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, 'FIFO')
+    executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, 'LRU')
+    executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, 'LFU')
+  else:
+    executar_mapeamento_associativo(total_cache, posicoes_memoria_para_acessar, politica_substituicao)
+
 elif tipo_mapeamento == 'AC':
   # o número de conjuntos deve ser um divisor do total da memória
   if total_cache%qtd_conjuntos != 0:
@@ -575,10 +587,16 @@ elif tipo_mapeamento == 'AC':
     print('------------------------------')
     exit()
 
-  executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, politica_substituicao)
+  if (politica_substituicao == 'ALL'):
+    executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, 'RANDOM')
+    executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, 'FIFO')
+    executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, 'LRU')
+    executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, 'LFU')
+  else:
+    executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, politica_substituicao)
 else:
   print('\n\n------------------------------')
-  print('ERRO: O tipo de mapeamento \'{}\'não foi encontrado.'.format(tipo_mapeamento))
+  print('ERRO: O tipo de mapeamento \'{}\'não foi encontrado. \nOs valores possíveis para o parâmetro --tipo_mapeamento são: DI / AS / AC'.format(tipo_mapeamento))
   print('------------------------------')
   exit()
 
