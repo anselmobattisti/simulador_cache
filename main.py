@@ -355,10 +355,18 @@ def politica_substituicao_LRU_hit(memoria_cache, qtd_conjuntos, posicao_memoria,
   # copiar os valores de cada posição da cache do conjunto em questão uma posição para traz
   for posicao_cache in lista_posicoes:
     if posicao_cache_hit <= posicao_cache:
+      # em uma cache com 4 conjuntos e 20 posições, as posições do 'conjunto 0' são:
+      # [0, 4, 8, 12, 16], se o hit for na poição 4, então, então, será necessário copiar os dados da posição
+      # 0 não faz nada
+      # 4 <- 8
+      # 8 <- 12
+      # 12 <- 16
+      # 16 <- 4
       proxima_posicao = posicao_cache+qtd_conjuntos
       if proxima_posicao < len(memoria_cache):
         memoria_cache[posicao_cache] = memoria_cache[proxima_posicao]
 
+  # coloca no topo da pilha a posição de memória que acabou de ser lida
   memoria_cache[lista_posicoes[-1]] = posicao_memoria
 
   if debug:
@@ -380,6 +388,8 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
 
   memoria_cache = inicializar_cache(total_cache)
 
+  # se o número de conjuntos for igual a zero, então estamos simulando
+  # com a cache associativo!
   if qtd_conjuntos == 1:
     print_cache_associativo(memoria_cache)
   else:
@@ -396,11 +406,13 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
   if politica_substituicao == 'LFU':
     inicializar_contador_lfu()
 
-
+  # percorre cada uma das posições de memória que estavam no arquivo
   for index, posicao_memoria in enumerate(posicoes_memoria_para_acessar):
     print('\n\n\nInteração número: {}'.format(index+1))
-    # verificar se existe ou não o dado na cache
+    # verificar se existe ou não a posição de memória desejada na cache
     inserir_memoria_na_posicao_cache = verifica_posicao_em_cache_associativo_conjunto(memoria_cache, qtd_conjuntos, posicao_memoria)
+
+    # a posição desejada já está na memória
     if inserir_memoria_na_posicao_cache >= 0:
       num_hit += 1
       hitoumiss = 'Hit'
@@ -414,13 +426,10 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
       if politica_substituicao == 'LRU':
         politica_substituicao_LRU_hit(memoria_cache, qtd_conjuntos, posicao_memoria, inserir_memoria_na_posicao_cache)
 
-
     else:
       num_miss += 1
       hitoumiss = 'Miss'
-      ########
-      # agora precisa executar as políticas de substituição
-      ########
+
       # verifica se existe uma posição vazia na cache, se sim aloca nela a posição de memória
       posicao_vazia = existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria)
 
@@ -429,6 +438,9 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
         print('Posição da cache ainda não utilizada: {}'.format(posicao_vazia))
         print('\nLeitura linha {}, posição de memória {}.'.format(index,posicao_memoria))
 
+      ########
+      # se posicao_vazia for < 0 então devemos executar as políticas de substituição
+      ########
       if posicao_vazia >= 0:
         memoria_cache[posicao_vazia] = posicao_memoria
       elif politica_substituicao == 'RANDOM':
@@ -456,7 +468,7 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
   print('-----------------')
   print('Política de Substituição: {}'.format(politica_substituicao))
   print('-----------------')
-  print('Total de acessos: {}'.format(len(posicoes_memoria_para_acessar)))
+  print('Total de memórias acessadas: {}'.format(len(posicoes_memoria_para_acessar)))
   print('Total HIT {}'.format(num_hit))
   print('Total MISS {}'.format(num_miss))
   taxa_cache_hit = (num_hit / len(posicoes_memoria_para_acessar))*100
@@ -520,7 +532,7 @@ def executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar):
   print('\n\n------------------------')
   print('Resumo Mapeamento Direto')
   print('------------------------')
-  print('Total de acessos: {}'.format(len(posicoes_memoria_para_acessar)))
+  print('Total de memórias acessadas: {}'.format(len(posicoes_memoria_para_acessar)))
   print('Total HIT: {}'.format(num_hit))
   print('Total MISS: {}'.format(num_miss))
   taxa_cache_hit = (num_hit / len(posicoes_memoria_para_acessar))*100
