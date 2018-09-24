@@ -2,18 +2,20 @@ import argparse, random, re
 
 
 # Essa lista irá armazenar qual o número de vezes que uma
-# determinada posição da memória cache foi executada
+# determinada posição da memória cache foi acessada.
 contador_lfu = {}
 
 
 # Essa lista irá armazenar a ordem que a posição da memória
-# principal foi inserida na memória cache
+# principal foi inserida na memória cache, quando ocorre um CACHE MISS
+# a posição ZERO dessa lista será removida e a nova posição de memória
+# será inserida no topo da lista.
 contador_fifo = {}
 
 
 def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
-  """Verifica se existe na cache alguma posição de memória vazia,
-  se existir essa posição é retornada.
+  """Verifica se existe na cache uma posição de memória que ainda não foi utilizada,
+  se existir, essa posição é retornada.
 
   Arguments:
     memoria_cache {list} -- memória cache
@@ -34,14 +36,16 @@ def existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria):
 
 
 def imprimir_contador_fifo():
-    print('+--------------------------------------+')
-    print("| Contador FIFO                        |")
-    print('+--------------------------------------+')
-    print("|Conjunto | Próxima Posição Substituir |")
-    print('+---------+----------------------------+')
-    for index, x in enumerate(contador_fifo):
-      print("|{:>9}|{:>28}|".format(index,x))
-    print('+---------+----------------------------+')
+  """Função de debug que exibe o estado do contador FIFO
+  """
+  print('+--------------------------------------+')
+  print("| Contador FIFO                        |")
+  print('+--------------------------------------+')
+  print("|Conjunto | Próxima Posição Substituir |")
+  print('+---------+----------------------------+')
+  for index, x in enumerate(contador_fifo):
+    print("|{:>9}|{:>28}|".format(index,x))
+  print('+---------+----------------------------+')
 
 
 def inicializar_contador_fifo():
@@ -57,6 +61,8 @@ def inicializar_contador_fifo():
 
 
 def imprimir_contador_lfu():
+    """Função de debug que exibe o estado do contador LFU
+    """
     print('+--------------------------------------+')
     print("| Contador LFU                         |")
     print('+--------------------------------------+')
@@ -68,9 +74,9 @@ def imprimir_contador_lfu():
 
 
 def inicializar_contador_lfu():
-  """Seta os valores do contador LFU para zero, ou seja, a posição que ocupa aquela
+  """Seta os valores do contador LFU para zero, ou seja, a posição de memória que ocupa aquela
   posição da cache ainda não foi utilizada. Para cada posição da cache teremos um contador
-  que será somado tada vez que houver um hit e será zerado quando a posição for substituida
+  que será somado tada vez que houver um CACHE HIT e, será zerado quando a posição for substituida
   """
   # cria on contador LFU uma posiçõao para caqda posição de memória
   for x in range(0, total_cache):
@@ -91,6 +97,8 @@ def get_num_conjuno_posicao_memoria(posicao_memoria, qtd_conjuntos):
 
 
 def print_cache_direto(cache):
+  """Imprime o estado da memória cache no modelo de mapeamento direto.
+  """
   print("+--------------------------+")
   print("|      Cache Direto        |")
   print("+--------------------------+")
@@ -104,6 +112,8 @@ def print_cache_direto(cache):
 
 
 def print_cache_associativo(cache):
+  """Imprime o estado da memória cache no modelo de mapeamento associativo.
+  """
   print("+--------------------------+")
   print("|Tamanho Cache: {:>11}| ".format(len(cache)))
   print("+----------+---------------+")
@@ -117,6 +127,8 @@ def print_cache_associativo(cache):
 
 
 def print_cache_associativo_conjunto(cache, qtd_conjuntos):
+  """Imprime o estado da memória cache no modelo de mapeamento associativo por conjunto.
+  """
   print("+------------------------------+")
   print("|Tamanho: {:>21}|\n|Conjuntos: {:>19}|".format(len(cache), qtd_conjuntos))
   print("+------------------------------+")
@@ -131,8 +143,8 @@ def print_cache_associativo_conjunto(cache, qtd_conjuntos):
 
 
 def inicializar_cache(total_cache):
-  """Cria uma memória cache zerada utilizando dicionários e com
-  valor padrão igual a -1
+  """Cria uma memória cache zerada utilizando dicionários (chave, valor) e com
+  valor padrão igual a '-1'
 
   Arguments:
     total_cache {int} -- tamanho total de palavras da cache
@@ -152,7 +164,7 @@ def inicializar_cache(total_cache):
 
 def verifica_posicao_em_cache_associativo_conjunto(memoria_cache, qtd_conjuntos, posicao_memoria,):
   """Verifica se uma determinada posição de memória está na cache
-    no modo associativo
+    no modo associativo / associativo por conjunto
 
   Arguments:
     memoria_cache {list} -- memória cache
@@ -172,7 +184,8 @@ def verifica_posicao_em_cache_associativo_conjunto(memoria_cache, qtd_conjuntos,
 
 
 def get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos):
-  """Retorna uma lista com todas as posições da memória cache que fazem parte de um determinado conjunto
+  """Retorna uma lista com todas as posições da memória cache que fazem
+  parte de um determinado conjunto.
 
   Arguments:
     memoria_cache {list} -- memória cache
@@ -191,8 +204,9 @@ def get_lista_posicoes_cache_conjunto(memoria_cache, num_conjunto, qtd_conjuntos
 
 
 def politica_substituicao_RANDOM(memoria_cache, qtd_conjuntos, posicao_memoria):
-  """Nessa politica de substituição no momento que ocorrer um cache miss
-  será sorteado um elemento do conjunto para ser removido
+  """Nessa politica de substituição, no momento que ocorrer um CACHE MISS,
+  será sorteado um elemento do conjunto para ser substituído pela nova posição
+  de memória.
 
   Arguments:
     memoria_cache {list} -- memóiria cache
@@ -215,7 +229,8 @@ def politica_substituicao_RANDOM(memoria_cache, qtd_conjuntos, posicao_memoria):
 
 
 def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
-  """Nessa politica de substituição o primeiro elemento que entra é o primeiro elemento que sai
+  """Nessa politica de substituição, o primeiro elemento que entra é o primeiro elemento que sai,
+  funciona exatamente como uma fila.
 
   Arguments:
     memoria_cache {list} -- memóiria cache
@@ -245,9 +260,10 @@ def politica_substituicao_FIFO(memoria_cache, qtd_conjuntos, posicao_memoria):
 
 
 def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
-  """Nessa politica de substituição o elemento que é menos acessado é removido da
-  memória cache quando ocorrer um MISS, a cada HIT aquela posição do HIT ganha um ponto
-  de acesso
+  """Nessa politica de substituição, o elemento que é menos acessado é removido da
+  memória cache quando ocorrer um CACHE MISS. A cada CACHE HIT a posição do HIT ganha um ponto
+  de acesso, isso é usado como contador para saber qual posição deve ser removida no caso de
+  CACHE MISS.
 
   Arguments:
     memoria_cache {list} -- memóiria cache
@@ -349,7 +365,6 @@ def politica_substituicao_LRU_hit(memoria_cache, qtd_conjuntos, posicao_memoria,
     print('Posição Memória: {}'.format(posicao_memoria))
     print('Conjunto: {}'.format(num_conjunto))
     print('Lista posições: {}'.format(lista_posicoes))
-
 
 
 def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoes_memoria_para_acessar, politica_substituicao='RANDOM'):
@@ -511,6 +526,11 @@ def executar_mapeamento_direto(total_cache, posicoes_memoria_para_acessar):
   taxa_cache_hit = (num_hit / len(posicoes_memoria_para_acessar))*100
   print('Taxa de Cache HIT: {number:.{digits}f}%'.format(number=taxa_cache_hit, digits=2))
 
+##########################
+# O programa começa aqui!
+##########################
+
+# parse dos parâmetros passados no comando
 parser = argparse.ArgumentParser(prog='Simulador de Cache')
 parser.add_argument('--total_cache', required=True, type=int, help='Número total de posições da memória cache.')
 parser.add_argument('--tipo_mapeamento', required=True, help='Tipo do mapeamento desejado. Os valores aceitos para esse parâmetro são: DI / AS / AC.')
@@ -615,5 +635,4 @@ if debug:
   print("Política de Substituição: {}".format(politica_substituicao))
   print("Debug: {}".format(debug))
   print('-'*80)
-
 
