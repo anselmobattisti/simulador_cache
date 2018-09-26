@@ -415,7 +415,7 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
     # a posição desejada já está na memória
     if inserir_memoria_na_posicao_cache >= 0:
       num_hit += 1
-      hitoumiss = 'Hit'
+      print('Cache HIT: posiçao de memória {}, posição cache {}'.format(posicao_memoria, inserir_memoria_na_posicao_cache))
 
       # se for LFU então toda vez que der um HIT será incrementado o contador daquela posição
       if politica_substituicao == 'LFU':
@@ -428,13 +428,12 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
 
     else:
       num_miss += 1
-      hitoumiss = 'Miss'
+      print('Cache MISS: posiçao de memória {}'.format(posicao_memoria))
 
       # verifica se existe uma posição vazia na cache, se sim aloca nela a posição de memória
       posicao_vazia = existe_posicao_vazia(memoria_cache, qtd_conjuntos, posicao_memoria)
 
       if debug:
-        print('Cache Miss')
         print('Posição da cache ainda não utilizada: {}'.format(posicao_vazia))
         print('\nLeitura linha {}, posição de memória {}.'.format(index,posicao_memoria))
 
