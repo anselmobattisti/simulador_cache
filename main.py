@@ -331,6 +331,7 @@ def politica_substituicao_LRU_miss(memoria_cache, qtd_conjuntos, posicao_memoria
     if proxima_posicao < len(memoria_cache):
       memoria_cache[posicao_cache] = memoria_cache[proxima_posicao]
 
+  # coloca a posição que acabou de ser lida na topo da lista, assim, ela nesse momento é a última que será removida
   memoria_cache[lista_posicoes[-1]] = posicao_memoria
 
   if debug:
