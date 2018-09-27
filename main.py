@@ -569,6 +569,13 @@ politica_substituicao  = args.politica_substituicao.upper()
 debug = args.debug
 step = args.step
 
+if qtd_conjuntos <= 0:
+  print('\n\n------------------------------')
+  print('ERRO: O número de conjuntos não pode ser 0.')
+  print('------------------------------')
+  exit()
+
+
 if arquivo_acesso == '':
   print('\n\n------------------------------')
   print('ERRO: É necesário informar o nome do arquivo que será processado, o parâmetro esperado é --arquivo_acesso seguido do nome do arquivo.')
@@ -654,5 +661,6 @@ if debug:
     print("Quantidade de Conjuntos: {}".format(qtd_conjuntos))
   print("Política de Substituição: {}".format(politica_substituicao))
   print("Debug: {}".format(debug))
+  print("Step: {}".format(step))
   print('-'*80)
 
