@@ -273,7 +273,7 @@ def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
   num_conjunto = int(posicao_memoria)%int(qtd_conjuntos)
   lista_posicoes = get_lista_posicoes_cache_conjunto(memoria_cache,num_conjunto, qtd_conjuntos)
 
-  # descobrir dentro do conjunto qual tem menos acesso
+  # descobrir dentro do conjunto qual posição da cache tem menos acesso
   posicao_substituir = 0
   if len(lista_posicoes) > 1:
 
@@ -287,7 +287,8 @@ def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
 
     posicoes_com_menos_acesso = min(lista_qtd_acessos)
     candidatos_lfu = []
-    for qtd_acessos in range(0, len(lista_posicoes)):
+
+    for qtd_acessos in lista_posicoes:
       if contador_lfu[qtd_acessos] == posicoes_com_menos_acesso:
         candidatos_lfu.append(qtd_acessos)
 
@@ -299,16 +300,16 @@ def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
   contador_lfu[posicao_substituir] = 0
 
   # altera a posição de memória que está na cache
-  memoria_cache[lista_posicoes[posicao_substituir]] = posicao_memoria
+  memoria_cache[posicao_substituir] = posicao_memoria
 
   if debug:
-    print('Posição Cache Substituir: {}'.format(posicao_substituir))
-    print('Contador LFU: {}'.format(contador_lfu))
-    print('Posição Memória: {}'.format(posicao_memoria))
+    print('Posição Memória Lida No Arquivo: {}'.format(posicao_memoria))
     print('Conjunto: {}'.format(num_conjunto))
-    print('Lista posições: {}'.format(lista_posicoes))
-    print('Posição para subistituição: {}'.format(posicao_substituir))
-    print('Posição de memória cache que será trocada é: {}'.format(lista_posicoes[posicao_substituir]))
+    print('Número de Acesso Da Posição com Menos Acesso: {}'.format(posicoes_com_menos_acesso))
+    print('Lista Posições do Conjuno: {}'.format(lista_posicoes))
+    print('Lista com as posições menos acessadas do conjunto: {}'.format(candidatos_lfu))
+    print('Posição Cache Substituir: {}'.format(posicao_substituir))
+    print('Posição de memória cache que será trocada é: {}'.format(posicao_substituir))
 
 
 def politica_substituicao_LRU_miss(memoria_cache, qtd_conjuntos, posicao_memoria):
@@ -390,9 +391,11 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
 
   # se o número de conjuntos for igual a zero, então estamos simulando
   # com a cache associativo!
+  nome_mapeamento = 'Associativo'
   if qtd_conjuntos == 1:
     print_cache_associativo(memoria_cache)
   else:
+    nome_mapeamento = 'Associativo Por Conjunto'
     print_cache_associativo_conjunto(memoria_cache, qtd_conjuntos)
 
   num_hit = 0
@@ -419,8 +422,8 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
 
       # se for LFU então toda vez que der um HIT será incrementado o contador daquela posição
       if politica_substituicao == 'LFU':
-        imprimir_contador_lfu()
         contador_lfu[inserir_memoria_na_posicao_cache] += 1
+        imprimir_contador_lfu()
 
       # se for LRU então toda vez que der um HIT será incrementado o contador daquela posição
       if politica_substituicao == 'LRU':
@@ -457,13 +460,16 @@ def executar_mapeamento_associativo_conjunto(total_cache, qtd_conjuntos, posicoe
     else:
       print_cache_associativo_conjunto(memoria_cache, qtd_conjuntos)
 
+    if step:
+      print('Tecle ENTER para processar o próximo passo:');
+      input()
 
   # se for LFU e com debug imprimir os dados computador no contador LFU
   if politica_substituicao == 'LFU' and debug:
     imprimir_contador_lfu()
 
   print('\n\n-----------------')
-  print('Resumo Mapeamento')
+  print('Resumo Mapeamento {}'.format(nome_mapeamento))
   print('-----------------')
   print('Política de Substituição: {}'.format(politica_substituicao))
   print('-----------------')
@@ -549,6 +555,7 @@ parser.add_argument('--politica_substituicao', default='ALL', help='Qual será a
 parser.add_argument('--qtd_conjuntos', type=int, default=1, help='Quando for escolhido o tipo de mapeamento AC deve-se informar quantos conjuntos devem ser criados dentro da memória cache.')
 parser.add_argument('--arquivo_acesso', required=True, default='', help='Nome do arquivo que possui as posições da memória principal que serão acessadas. Para cada linha do arquivo deve-se informar um número inteiro.')
 parser.add_argument('--debug', default=0, help='Por padrão vem setado como 0, caso queira exibir as mensagens de debugs basta passar --debug 1.')
+parser.add_argument('--step', default=0, help='Solicita a interação do usuário após cada linha processada do arquivo --step 1.')
 
 args = parser.parse_args()
 
@@ -559,6 +566,7 @@ arquivo_acesso = args.arquivo_acesso
 qtd_conjuntos = args.qtd_conjuntos
 politica_substituicao  = args.politica_substituicao.upper()
 debug = args.debug
+step = args.step
 
 if arquivo_acesso == '':
   print('\n\n------------------------------')
