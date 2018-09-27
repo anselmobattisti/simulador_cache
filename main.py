@@ -282,7 +282,7 @@ def politica_substituicao_LFU(memoria_cache, qtd_conjuntos, posicao_memoria):
 
     # descobrir qual das posições é menos usada
     lista_qtd_acessos = []
-    for qtd_acessos in range(0, len(lista_posicoes)):
+    for qtd_acessos in lista_posicoes:
       lista_qtd_acessos.append(contador_lfu[qtd_acessos])
 
     posicoes_com_menos_acesso = min(lista_qtd_acessos)
@@ -552,7 +552,7 @@ parser = argparse.ArgumentParser(prog='Simulador de Cache')
 parser.add_argument('--total_cache', required=True, type=int, help='Número total de posições da memória cache.')
 parser.add_argument('--tipo_mapeamento', required=True, help='Tipo do mapeamento desejado. Os valores aceitos para esse parâmetro são: DI / AS / AC.')
 parser.add_argument('--politica_substituicao', default='ALL', help='Qual será a política de substituição da cache que será utilizada. Os valores aceitos para esse parâmetro são: RANDOM / FIFO / LRU / LFU.')
-parser.add_argument('--qtd_conjuntos', type=int, default=1, help='Quando for escolhido o tipo de mapeamento AC deve-se informar quantos conjuntos devem ser criados dentro da memória cache.')
+parser.add_argument('--qtd_conjuntos', type=int, default=2, help='Quando for escolhido o tipo de mapeamento AC deve-se informar quantos conjuntos devem ser criados dentro da memória cache.')
 parser.add_argument('--arquivo_acesso', required=True, default='', help='Nome do arquivo que possui as posições da memória principal que serão acessadas. Para cada linha do arquivo deve-se informar um número inteiro.')
 parser.add_argument('--debug', default=0, help='Por padrão vem setado como 0, caso queira exibir as mensagens de debugs basta passar --debug 1.')
 parser.add_argument('--step', default=0, help='Solicita a interação do usuário após cada linha processada do arquivo --step 1.')
