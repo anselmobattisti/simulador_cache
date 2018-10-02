@@ -1,13 +1,11 @@
 # Simulador de Cache
 
 Olá, ficamos muito felizes que você tenha interesse em aprender um pouco mais sobre as políticas de substituição de páginas da memória cache!
-
-A memória cache possui menos espaço de memória que a memória principal, logo, é necessário que seja implementado um mecanismo que permita que os endereços da memória principal, sejam associados a endereços da memória cache, além disso, é necessário uma política de substituição dos dados na memória cache caso seja necessário a atualização de dados pelo processador.
-
-Esse script, permite que seja visualizado de forma didática, como ocorre a escolha e a substituição de uma posição de memória no cache, em três modelos diferentes de mapeamento de memória, sendo eles: mapeamento direto, associativo e associativo por conjunto.
+A memória cache possui menos espaço de memória que a memória principal, logo, é necessário que seja implementado um mecanismo que permita que os endereços da memória principal, sejam associados a endereços da memória cache, além disso, é necessário uma política de substituição dos dados nas memórias, caso seja necessário a atualização de dados pelo processador.
+Esse script, permite que seja visualizado de forma didática, como ocorre a escolha e a substituição de uma posição de memória no cache, em três modelos diferentes de mapeamento de memória.
 
 
-Instalação do Script
+Instalação
 --
 
 O único pré-requisito do script é que sua máquina tenha instalado o python 3.7 ou superior.
@@ -25,7 +23,7 @@ Como resultado desejado deve aparecer algo do como:
 Python 3.7.0
 ```
 
-O arquivo principal é o main.py. Após a instalação do script para acessar o help da aplicação, basta digitar no console o comando a seguir:
+Após a instalação do script para acessar o help da aplicação, basta digitar no console o comando a seguir:
 
 ```
 $ python main.py -h
@@ -70,31 +68,27 @@ optional arguments:
                         processada do arquivo --step 1.
 ```
 
-Os exemplos de acesso a memória estão na parta arquivos_teste. Cada linha representa um acesso a uma posição da memória principal e o seu valor é um número inteiro que representa o número da posição que está sendo acessada.
-
 # O que foi implementado
 --
 
 No simulador, a memória cache poderá ser organizada em três diferentes esquemas, sendo eles:
 
 * DI - Direto;
-* AS - Associativo;
+* AS - Associativo; e
 * AC - Associativo por contjunto.
 
 Além disso, você pode escolher qual será a política de substituição de páginas da memória cache será utilizada. Estão implementados 4 algoritmos de substituição, sendo eles:
 
 * FIFO;
 * LRU;
-* LFU;
+* LFU; e
 * RANDOM.
 
 ## 1 - Mapeamento Direto
 
-O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache. Nessa aplicação essa associação foi implementado utilizando o mod, porém, caso o endereçamento de memória seja binário em geral é utilizado um conjunto dos primeiros do endereçamento da posição de memória como referência da posição da memória cache, o tamanho da memória cache definirá a quantidade de bits que serão selecionados.
-
-Nessa aplicação de exemplo foram criados quatro arquivos com cenários diferentes com relação ao uso do mapeamento direto, tentamos aqui refletir as principais situação de cache hit e cache miss.
-
-No primeiro exemplo não ocorrem CACHE HIT, ou seja, para cada posição de memória desejada será necessário ir buscar na memória principal.
+O mapeamento direto da memória cache, é aquele que associa cada posição da memória principal, com uma posição específica da memória cache. Na aplicação essa associação foi implementada utilizando o mod como método de separação dos blocos, porém, caso o endereçamento de memória seja binário em geral é utilizado um conjunto dos primeiros blocos do endereçamento da posição de memória. Como referência na posição da memória cache, o tamanho da memória cache definirá a quantidade de bits que serão selecionados.
+Nessa aplicação como exemplo, foram criados quatro arquivos com cenários (entradas) diferentes com relação ao uso do mapeamento direto, objetivando exibir aqui as principais situações de cache hit e cache miss.
+No primeiro exemplo não ocorre CACHE HIT, ou seja, para cada posição de memória desejada será necessário ir acessar e buscar na memória principal.
 
 O arquivo acesso_direto_0_hit.txt é composto por:
 ```
@@ -116,7 +110,7 @@ Executando o comando:
 $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_0_hit.txt
 ```
 
-O resultado final da executação será:
+O resultado final da execução será:
 
 ```
 +--------------------------+
@@ -147,9 +141,9 @@ Total MISS: 10
 Taxa de Cache HIT: 0.00%
 ```
 
-É imporatnte ressaltar que nesse exemplo algumas posições da memória cache não foram utilizadas pois nenhuma das posições de memória solicitadas estavam associadas com as posições de memória vazias, com -1.  Isso mostra que a associação direta ganha em tempo de computação mas, em contra partida, pode perder em flexibilidade uma vez que mesmo havendo posições de memória cache disponível foi necessário fazer a substituição de uma página de memória na memória cache.
+É importante ressaltar que nesse exemplo algumas posições da memória cache não foram utilizadas, pois nenhuma das posições de memória solicitadas estavam associadas com as posições de memória vazias, com -1. Isso mostra que a associação direta ganha em tempo de computação, mas em contrapartida, pode perder em flexibilidade uma vez que mesmo havendo posições de memória cache disponível, foi necessário fazer a substituição de uma página de memória na memória cache.
 
-Caso o mesmo arquivo seja executado utilizando, por exemplo, um esquema de cache associativo o resultado final seria:
+Caso o mesmo arquivo seja executado utilizando, por exemplo, um esquema de cache associativo, o resultado final será:
 
 ```
 +--------------------------+
@@ -172,11 +166,10 @@ Caso o mesmo arquivo seja executado utilizando, por exemplo, um esquema de cache
 +----------+---------------+
 ```
 
-Perceba agora que como o tamanho da cache é exatamente igual a quantidade de posições diferentes de memória que está se tentando acessar, não existe troca de posição de memória na cache, isso é bom pois assim estamos utilizando a cache de maneira integral.
+É possível observar que o tamanho da cache é exatamente igual a quantidade de posições de blocos diferentes na memória principal, isso é bom pois assim é utilizando a cache de maneira integral e ambas as memórias.
+No segundo exemplo, duas posições são consecutivamente acessadas, então ocorre cache miss apenas no primeiro acesso e em seguida, todos os demais acessos são CACHE HIT.
 
-No segundo exemplo, duas posições são consecutivamente acessadas, então ocorre cache miss apenas na primeira vez que a posição é acessada e em seguinda todos os demais acesso são CACHE HIT.
-
-O arquivo arquivos_teste/acesso_direto_50_hit.txt é composto por
+O arquivo arquivo_teste/acesso_direto_50_hit.txt é composto por:
 
 ```
 0
