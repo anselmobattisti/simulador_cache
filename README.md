@@ -34,7 +34,14 @@ usage: Simulador de Cache [-h] --total_cache TOTAL_CACHE --tipo_mapeamento
                           TIPO_MAPEAMENTO
                           [--politica_substituicao POLITICA_SUBSTITUICAO]
                           [--qtd_conjuntos QTD_CONJUNTOS] --arquivo_acesso
-                          ARQUIVO_ACESSO [--debug DEBUG]
+                          ARQUIVO_ACESSO [--debug DEBUG] [--step STEP]
+Simulador de Cache: error: the following arguments are required: --total_cache, --tipo_mapeamento, --arquivo_acesso
+PS C:\anselmo\versionado\simulador_cache> python .\main.py -h
+usage: Simulador de Cache [-h] --total_cache TOTAL_CACHE --tipo_mapeamento
+                          TIPO_MAPEAMENTO
+                          [--politica_substituicao POLITICA_SUBSTITUICAO]
+                          [--qtd_conjuntos QTD_CONJUNTOS] --arquivo_acesso
+                          ARQUIVO_ACESSO [--debug DEBUG] [--step STEP]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -57,34 +64,27 @@ optional arguments:
                         arquivo deve-se informar um número inteiro.
   --debug DEBUG         Por padrão vem setado como 0, caso queira exibir as
                         mensagens de debugs basta passar --debug 1.
+  --step STEP           Solicita a interação do usuário após cada linha
+                        processada do arquivo --step 1.
 ```
 
-
-O que foi implementado
+# O que foi implementado
 --
 
-Esse projeto foi desenvolvido com o objetivo de apresentar as principais políticas de substituição de páginas em memória cache. Serão implementados 4 algoritmos de substituição, sendo eles:
+No simulador, a memória cache poderá ser organizada em três diferentes esquemas, sendo eles:
+
+* DI - Direto
+* AS - Associativo
+* AC - Associativo por contjunto
+
+Além disso, você pode escolher qual será a política de substituição de páginas da memória cache será utilizada. Estão implementados 4 algoritmos de substituição, sendo eles:
 
 * FIFO
 * LRU
 * LFU
 * RANDOM
 
-No simulador, a memória poderá ser organizada em três diferentes esquemas de esquemas de associação endereçamento de memória / endereço de cache, sendo eles:
-
-* DI - Direto
-* AS - Associativo
-* AC - Associativo por contjunto
-
-Os parâmetros recebidos pelo programa são:
-
-* total_cache: número máximo de páginas que a memória cache suporta (número inteiro)
-* tipo_mapeamento: DI / AS / AC
-* arquivo_acesso: arquivo com as entradas das posições de memória que dem acessadas, cada linha corresponde a uma posição de memória diferente.
-
-Exemplo de uso:
-
-# 1 - Mapeamento Direto
+## 1 - Mapeamento Direto
 
 O mapeamento direto da memória cache é aquele que associa cada posição da memória principal com uma posição específica da memória cache. Nessa aplicação essa associação foi implementado utilizando o mod, porém, caso o endereçamento de memória seja binário em geral é utilizado um conjunto dos primeiros do endereçamento da posição de memória como referência da posição da memória cache, o tamanho da memória cache definirá a quantidade de bits que serão selecionados.
 
@@ -292,7 +292,7 @@ Nota dos autores sobre o método de mapeamento direto
 
 No método de mapeamento direto não existem políticas de substituição de cache uma vez que a posição da memória principal sempre estará mapeada com a mesma posição da memória cache. Em contra partida, nos modos associativo e associativo por conjunto essa relação direta entre as duas memórias existe mas com granularidade menor, e com isso surge a necessidade que sejam implementados mecanismos para escolher em caso de falta de espaço na memória cache para armazenar uma posição da memória principal qual posição será descartada para que a nova posição seja ocupada.
 
-# 2 - Mapeamento Associativo
+## 2 - Mapeamento Associativo
 
 
 No mapeamento associativo não existe uma relação pré-estabelecida entre a posição da memória principal e a posição da memória cache, ou seja, não existe determinismo entre a posição da memória principal e a posição da memória cache. Dessa forma para saber se uma posição da memória principal está na memória cache é necessário percorrer toda a memória cache a fim de verificar se a posição da memória princial está ou não na cache.
@@ -303,7 +303,7 @@ A vantágem desse modelo de mapeamento em relação ao modelo direto é que não
 
 Abaixo serão apresentados alguns exemplos de uso do simulador onde é utilizado o esquema de mapeamento associativo juntamente com esquemas diversos de substituição de memória.
 
-## FIFO
+### FIFO
 
 Nesse esquema de substituição o primeiro elemento que entra é o primeiro elemento que sai.
 
@@ -365,7 +365,7 @@ Debug: 1
 --------------------------------------------------------------------
 ```
 
-## RANDOM
+### RANDOM
 
 Nesse esquema de substituição existe a escolha aleatória sobre qual elemento da cache deve ser substituida.
 
@@ -397,7 +397,7 @@ $ python main.py --total_cache 4 --tipo_mapeamento=AS --arquivo_acesso=arquivos_
 
 Note que a sua saída não necessariamente será igual a saída apresentada abaixo uma vez que a escolha do elemento da cache que será removido é aleatória.
 
-### Execução A
+#### Execução A
 ```
 +--------------------------+
 |Tamanho Cache:           4|
@@ -424,7 +424,7 @@ Total MISS 8
 Taxa de Cache HIT 42.86%
 ```
 
-### Execução B
+#### Execução B
 
 ```
 +--------------------------+
@@ -452,7 +452,7 @@ Total MISS 7
 Taxa de Cache HIT 50.00%
 ```
 
-## LRU
+### LRU
 
 Nesse esquema de substituição quando ocorre um CACHE MISS e é necessário trazer uma nova posição da memóiria principal para a memória cache então será removido a posição de memória que está na cache que foi usada há mais tempo.
 
@@ -545,7 +545,7 @@ Debug: 1
 ```
 
 
-# 3 - Mapeamento Associativo por Conjuntos
+## 3 - Mapeamento Associativo por Conjuntos
 
 Nesse modo, a memória cache é dividida em conjutos, ou seja, uma posição da memória principal é mapeada sempre para um mesmo conjunto e isso permite uma consulta mais rápida na cache se uma dada posição de memória está ou não nela.
 
