@@ -191,8 +191,7 @@ Executando o comando:
 $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_50_hit.txt
 ```
 
-O resultado final da executação será:
-
+O resultado final da execução será:
 ```
 +--------------------------+
 |      Cache Direto        |
