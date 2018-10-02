@@ -1,11 +1,13 @@
 # Simulador de Cache
 
 Olá, ficamos muito felizes que você tenha interesse em aprender um pouco mais sobre as políticas de substituição de páginas da memória cache!
-A memória cache possui menos espaço de memória que a memória principal, logo, é necessário que seja implementado um mecanismo que permita que os endereços da memória principal, sejam associados a endereços da memória cache, além disso, é necessário uma política de substituição dos dados nas memórias, caso seja necessário a atualização de dados pelo processador.
-Esse script, permite que seja visualizado de forma didática, como ocorre a escolha e a substituição de uma posição de memória no cache, em três modelos diferentes de mapeamento de memória.
+
+A memória cache possui menos espaço de memória que a memória principal, logo, é necessário que seja implementado um mecanismo que permita que os endereços da memória principal, sejam associados a endereços da memória cache, além disso, é necessário uma política de substituição dos dados na memória cache caso seja necessário a atualização de dados pelo processador.
+
+Esse script, permite que seja visualizado de forma didática, como ocorre a escolha e a substituição de uma posição de memória no cache, em três modelos diferentes de mapeamento de memória, sendo eles: mapeamento direto, associativo e associativo por conjunto.
 
 
-Instalação
+Instalação do Script
 --
 
 O único pré-requisito do script é que sua máquina tenha instalado o python 3.7 ou superior.
@@ -23,7 +25,7 @@ Como resultado desejado deve aparecer algo do como:
 Python 3.7.0
 ```
 
-Após a instalação do script para acessar o help da aplicação, basta digitar no console o comando a seguir:
+O arquivo principal é o main.py. Após a instalação do script para acessar o help da aplicação, basta digitar no console o comando a seguir:
 
 ```
 $ python main.py -h
@@ -67,6 +69,8 @@ optional arguments:
   --step STEP           Solicita a interação do usuário após cada linha
                         processada do arquivo --step 1.
 ```
+
+Os exemplos de acesso a memória estão na parta arquivos_teste. Cada linha representa um acesso a uma posição da memória principal e o seu valor é um número inteiro que representa o número da posição que está sendo acessada.
 
 # O que foi implementado
 --
