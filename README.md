@@ -651,3 +651,5 @@ No próximo exemplo temos um total de 4 posições da memória cahce e dois conj
 ```
 $ python main.py --total_cache 4 --tipo_mapeamento=AC --arquivo_acesso=arquivos_teste/lru_3.txt --debug 1 --politica_substituicao LRU --qtd_conjuntos 2
 ```
+
+A forma como os algorítmos de paginação são executados no mapeamento associativo por conjunto é exatamente igual ao modo associativo. A única diferença é que ao invés de fazer a substitução de página dentro de toda a cache, como no associativo, no associativo por conjunto, a substituição de página é feita apenas dentro do conjunto onde a posição de memória deveria ter sido mapeada.
