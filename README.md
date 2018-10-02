@@ -78,14 +78,14 @@ Os exemplos de acesso a memória estão na parta arquivos_teste. Cada linha repr
 No simulador, a memória cache poderá ser organizada em três diferentes esquemas, sendo eles:
 
 * DI - Direto;
-* AS - Associativo; e
+* AS - Associativo;
 * AC - Associativo por contjunto.
 
 Além disso, você pode escolher qual será a política de substituição de páginas da memória cache será utilizada. Estão implementados 4 algoritmos de substituição, sendo eles:
 
 * FIFO;
 * LRU;
-* LFU; e
+* LFU;
 * RANDOM.
 
 ## 1 - Mapeamento Direto
