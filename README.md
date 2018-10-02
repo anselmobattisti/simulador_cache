@@ -222,13 +222,11 @@ Total MISS: 2
 Taxa de Cache HIT: 80.00%
 ```
 
-Observer que nesse caso temos uma alta taxa de CACHE HIT e novamente um uso limitado da cache.
+Observe que nesse caso temos uma alta taxa de CACHE HIT e novamente um uso limitado da cache.
+No terceiro exemplo temos uma mesma posição sendo acessada consecutivamente, assim, ocorre apenas um miss e o restante é hit.
+No terceiro exemplo apresentamos um cenário onde a ineficiência do mapeamento direto é apresentada. Apesar de existir um número grande de memória, o número de CACHE MISS é elevado, uma vez que está sendo feita um alto uso de memória, de uma mesma localidade de memória, com sombreamento entre si, gerando assim um fenômeno onde existe cache disponível, mas o modo como o mapeamento é feito, no caso, associativo, impede o uso da totalidade da cache.
+O arquivo arquivos_teste/acesso_direto_misto_hit.txt é composto por:
 
-No teceriro exemplo temos uma mesma posição sendo acessada consecutivamente, assim, ocorre apenas um miss e o restante é hit
-
-No terceiro exemplo apresentamos um cenário onde a ineficiência do mapeamento direto é apresentada. Apesar de existir um número grande de memória o número de CACHE MISS é elevado uma vez que está sendo feita um alto uso de memória de uma mesma localidade de memória com sombreamento entre si de utilização de memória, gerando assim um fenômeno onde existe cache disponível mas o modo como o mapeamento é feito, no caso, associativo, impede o uso da totalidade da cache.
-
-O arquivo arquivos_teste/acesso_direto_misto_hit.txt é composto por
 
 ```
 0
@@ -251,7 +249,7 @@ Executando o comando:
 $ python main.py --total_cache 10 --tipo_mapeamento=DI --arquivo_acesso=arquivos_teste/acesso_direto_misto_hit.txt
 ```
 
-O resultado final da executação será:
+O resultado final da execução será:
 
 ```
 +--------------------------+
@@ -286,7 +284,7 @@ Taxa de Cache HIT: 15.38%
 Nota dos autores sobre o método de mapeamento direto
 --
 
-No método de mapeamento direto não existem políticas de substituição de cache uma vez que a posição da memória principal sempre estará mapeada com a mesma posição da memória cache. Em contra partida, nos modos associativo e associativo por conjunto essa relação direta entre as duas memórias existe mas com granularidade menor, e com isso surge a necessidade que sejam implementados mecanismos para escolher em caso de falta de espaço na memória cache para armazenar uma posição da memória principal qual posição será descartada para que a nova posição seja ocupada.
+No método de mapeamento direto não existem políticas de substituição de cache, uma vez que a posição da memória principal sempre estará mapeada com a mesma posição da memória cache. Em contrapartida, nos modos associativo e associativo por conjunto essa relação direta entre as duas memórias existe, mas com granularidade menor, e com isso, surge a necessidade que sejam implementados mecanismos para escolher (em caso de falta de espaço na memória cache), para armazenar uma posição da memória principal, na qual a posição será descartada para que a nova posição seja ocupada.
 
 ## 2 - Mapeamento Associativo
 
