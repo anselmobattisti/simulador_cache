@@ -1,29 +1,29 @@
 # Simulador de Cache
 
 Olá, ficamos muito felizes que você tenha interesse em aprender um pouco mais sobre as políticas de substituição de páginas da memória cache!
+A memória cache possui menos espaço de memória que a memória principal, logo, é necessário que seja implementado um mecanismo que permita que os endereços da memória principal, sejam associados a endereços da memória cache, além disso, é necessário uma política de substituição dos dados nas memórias, caso seja necessário a atualização de dados pelo processador.
+Esse script, permite que seja visualizado de forma didática, como ocorre a escolha e a substituição de uma posição de memória no cache, em três modelos diferentes de mapeamento de memória.
 
-A memória cache é menor do que a memória principal, logo, é necessário que existam mecanismos que permitam que um endereço da memória principal seja associado com um endereço da memória cache, além disso, no momento que a memória cache estiver cheia e um novo dados da memória principal for ser executado é necessário que algum dado antigo da memória cache seja removido, são as políticas de substituição de memória.
-
-Esse script permite que você visualize de forma didática como ocorre a escolha e a substituição de uma posição de memória no cache em três modelos diferentes de mapeamento de memória.
 
 Instalação
 --
 
-O único pré-requisito do script é que sua maquina rode python 3.7+
+O único pré-requisito do script é que sua máquina tenha instalado o python 3.7 ou superior.
 
-Para saber qual versão do python que você tem instalado acesse o seu terminal e digite:
+Para saber qual versão do python que você tem instalado, acesse o seu terminal e digite:
+
 
 ```
 $ python --version
 ```
 
-Como resultado desejado deve aparecer algo do tipo
+Como resultado desejado deve aparecer algo do como:
 
 ```
 Python 3.7.0
 ```
 
-Após a instalação do script para acessar o help basta digitar no console:
+Após a instalação do script para acessar o help da aplicação, basta digitar no console o comando a seguir:
 
 ```
 $ python main.py -h
@@ -73,16 +73,16 @@ optional arguments:
 
 No simulador, a memória cache poderá ser organizada em três diferentes esquemas, sendo eles:
 
-* DI - Direto
-* AS - Associativo
-* AC - Associativo por contjunto
+* DI - Direto;
+* AS - Associativo; e
+* AC - Associativo por contjunto.
 
 Além disso, você pode escolher qual será a política de substituição de páginas da memória cache será utilizada. Estão implementados 4 algoritmos de substituição, sendo eles:
 
-* FIFO
-* LRU
-* LFU
-* RANDOM
+* FIFO;
+* LRU;
+* LFU; e
+* RANDOM.
 
 ## 1 - Mapeamento Direto
 
